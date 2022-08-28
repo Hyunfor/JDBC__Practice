@@ -37,6 +37,9 @@ public class Main {
 				System.out.println("body : " + body);
 				
 				Article article = new Article(id, title, body);
+				
+				System.out.println(article);
+				
 				articles.add(article);
 				lastArticleId++;
 				
@@ -57,6 +60,7 @@ public class Main {
 				}
 				
 			}
+			
 		}
 
 	}
