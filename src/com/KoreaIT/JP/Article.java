@@ -1,3 +1,4 @@
+package com.KoreaIT.JP;
 
 public class Article {
 	public int id;
