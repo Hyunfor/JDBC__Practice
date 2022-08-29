@@ -22,3 +22,5 @@ title = CONCAT('제목',RAND()),
 `body` = CONCAT('내용',RAND());
 
 SELECT RAND() # 무작위 난수 생성
+
+SELECT * FROM article ORDER BY id DESC; # 역순으로 확인
