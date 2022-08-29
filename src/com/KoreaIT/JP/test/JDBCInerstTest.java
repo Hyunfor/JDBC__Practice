@@ -3,6 +3,7 @@ package com.KoreaIT.JP.test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class JDBCInerstTest {
@@ -24,7 +25,7 @@ public class JDBCInerstTest {
 				sql += "title = CONCAT('제목',RAND()),";
 				sql += "`body` = CONCAT('내용',RAND());";
 
-//				System.out.println(sql);
+				System.out.println(sql);
 				pstmt = conn.prepareStatement(sql);
 
 				int affectedRows = pstmt.executeUpdate();
