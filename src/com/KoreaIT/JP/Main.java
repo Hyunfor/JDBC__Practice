@@ -6,12 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClassNotFoundException {
 		
 		Scanner sc = new Scanner(System.in);
 		
@@ -91,7 +93,7 @@ public class Main {
 				lastArticleId++;
 				
 				
-			} else if (cmd.startsWith("article modify ")) {
+			} else if (cmd.startsWith("article modify ")) { // 게시글 수정
 
 				int id = Integer.parseInt(cmd.split(" ")[2]);
 
@@ -147,6 +149,101 @@ public class Main {
 				}
 
 				System.out.printf("%d번 게시물이 수정 되었습니다.\n", id);
+				
+			} else if (cmd.startsWith("article delete ")) {
+
+				int id = Integer.parseInt(cmd.split(" ")[2]);
+
+				System.out.printf("== %d번 게시물 삭제 ==\n", id);
+
+				List<Article> articles = new ArrayList<>();
+
+				Connection conn = null;
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
+
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+					String url = "jdbc:mysql://127.0.0.1:3306/JDBCTest?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
+
+					conn = DriverManager.getConnection(url, "root", "");
+					System.out.println("연결 성공!");
+
+					String sql = "SELECT *";
+					sql += " FROM article";
+					sql += " WHERE id = " + id + ";";
+
+					pstmt = conn.prepareStatement(sql);
+					rs = pstmt.executeQuery();
+
+					while (rs.next()) {
+						id = rs.getInt("id");
+						String regDate = rs.getString("regDate");
+						String updateDate = rs.getString("updateDate");
+						String title = rs.getString("title");
+						String body = rs.getString("body");
+
+						Article article = new Article(id, regDate, updateDate, title, body);
+						articles.add(article);
+					}
+
+					if (articles.size() == 0) {
+						System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+						continue;
+					}
+
+				} catch (ClassNotFoundException e) {
+					System.out.println("드라이버 로딩 실패");
+				} catch (SQLException e) {
+					System.out.println("에러: " + e);
+				} finally {
+					try {
+						if (conn != null && !conn.isClosed()) {
+							conn.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					try {
+						if (pstmt != null && !pstmt.isClosed()) {
+							pstmt.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+					String url = "jdbc:mysql://127.0.0.1:3306/JDBCTest?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
+
+					conn = DriverManager.getConnection(url, "root", "");
+
+					String sql = "DELETE From article";
+					sql += " WHERE id = " + id + ";";
+
+					pstmt = conn.prepareStatement(sql);
+					rs = pstmt.executeUpdate();
+
+					System.out.printf("%d번 게시물이 삭제 되었습니다.\n", id);
+					System.out.println(sql);
+				} catch (SQLException e) {
+					System.out.println("에러: " + e);
+				} finally {
+					try {
+						if (conn != null && !conn.isClosed()) {
+							conn.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					try {
+						if (pstmt != null && !pstmt.isClosed()) {
+							pstmt.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
 				
 			} else if(cmd.equals("article list")) {
 				System.out.println("=== 게시물 리스트 ===");
@@ -229,6 +326,33 @@ public class Main {
 			
 		}
 
+	}
+
+	private static int seletIntValue(Connection conn, String sql) {
+		Map<String, Object> row = selectRow(conn, sql);
+		
+		for(String key: row.keySet()) {
+			return (int)row.get(key);
+		}
+		return -1;
+	}
+
+	private static Map<String, Object> selectRow(Connection conn, String sql) {
+		List<Map<String, Object>> rows = selectRows(conn,sql);
+		
+		if(rows.size() == 0) {
+			return new HashMap<>();
+		}
+		
+		return rows.get(0);
+	}
+
+	private static List<Map<String, Object>> selectRows(Connection conn, String sql) {
+		List<Map<String, Object>> rows = new ArrayList();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		return null;
 	}
 
 }

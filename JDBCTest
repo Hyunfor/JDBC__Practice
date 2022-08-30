@@ -24,3 +24,7 @@ title = CONCAT('제목',RAND()),
 SELECT RAND() # 무작위 난수 생성
 
 SELECT * FROM article ORDER BY id DESC; # 역순으로 확인
+
+UPDATE article SET updateDate = NOW(), title = '1', `body` = '1' WHERE id = 10; # 수정
+
+DELETE FROM article WHERE id = 10; # 삭제
