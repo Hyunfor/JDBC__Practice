@@ -29,8 +29,112 @@ public class Main {
 				System.out.println("===종료===");
 				break;
 			}
+			if (cmd.equals("member join")) {
 
-			if (cmd.equals("article write")) {
+				Connection conn = null;
+				PreparedStatement pstmt = null;
+
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+					String url = "jdbc:mysql://127.0.0.1:3306/JDBCTest?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
+
+					conn = DriverManager.getConnection(url, "root", "");
+					System.out.println("연결 성공!");
+
+					System.out.println("== 회원 가입 ==");
+
+					String loginId = null;
+					String loginPw = null;
+					String loginPwCheck = null;
+					String name = null;
+
+					while (true) {
+						System.out.printf("아이디 : ");
+						loginId = sc.nextLine().trim();
+						if (loginId.length() == 0) {
+							System.out.println("아이디를 입력해주세요");
+							continue;
+						}
+						break;
+					}
+					while (true) {
+						System.out.printf("비밀번호 : ");
+						loginPw = sc.nextLine().trim();
+
+						if (loginPw.length() == 0) {
+							System.out.println("비밀번호를 입력해주세요");
+							continue;
+						}
+
+						boolean loginPwConfirm = true;
+
+						while (true) {
+							System.out.printf("비밀번호 확인 : ");
+							loginPwCheck = sc.nextLine().trim();
+
+							if (loginPwCheck.length() == 0) {
+								System.out.println("비밀번호 확인을 입력해주세요");
+								continue;
+							}
+
+							if (loginPw.equals(loginPwCheck) == false) {
+								System.out.println("비밀번호가 일치하지 않습니다. 다시 입력해주세요");
+								loginPwConfirm = false;
+								break;
+							}
+							break;
+						}
+						if (loginPwConfirm) {
+							break;
+						}
+					}
+					while (true) {
+						System.out.printf("이름 : ");
+						name = sc.nextLine();
+
+						if (name.length() == 0) {
+							System.out.println("이름을 입력해주세요");
+							continue;
+						}
+						break;
+					}
+
+					SecSql sql = new SecSql();
+					sql.append("INSERT INTO `member`");
+					sql.append(" SET regDate = NOW()");
+					sql.append(", updateDate = NOW()");
+					sql.append(", loginId = ?", loginId);
+					sql.append(", loginPw = ?", loginPw);
+					sql.append(", `name` = ?", name);
+
+					int id = DBUtil.insert(conn, sql);
+
+					System.out.println(sql);
+
+					System.out.printf("%s님, 회원가입 되었습니다\n", name);
+
+				} catch (ClassNotFoundException e) {
+					System.out.println("드라이버 로딩 실패");
+				} catch (SQLException e) {
+					System.out.println("에러: " + e);
+				} finally {
+					try {
+						if (conn != null && !conn.isClosed()) {
+							conn.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					try {
+						if (pstmt != null && !pstmt.isClosed()) {
+							pstmt.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+
+			} else if (cmd.equals("article write")) {
 				System.out.println("== 게시물 작성 ==");
 				System.out.printf("제목 : ");
 				String title = sc.nextLine();
@@ -46,12 +150,6 @@ public class Main {
 
 					conn = DriverManager.getConnection(url, "root", "");
 					System.out.println("연결 성공!");
-
-//					String sql = "INSERT INTO article";
-//					sql += " SET regDate = NOW()";
-//					sql += ", updateDate = NOW()";
-//					sql += ", title = '" + title + "'";
-//					sql += ", `body` = '" + body + "';";
 
 					SecSql sql = new SecSql();
 					sql.append("INSERT INTO article");
@@ -100,12 +198,6 @@ public class Main {
 
 					conn = DriverManager.getConnection(url, "root", "");
 					System.out.println("연결 성공!");
-
-//					String sql = "UPDATE article";
-//					sql += " SET updateDate = NOW()";
-//					sql += ", title = '" + title + "'";
-//					sql += ", `body` = '" + body + "'";
-//					sql += " WHERE id = " + id + ";";
 
 					SecSql sql = new SecSql();
 					sql.append("SELECT COUNT(*)");
@@ -231,11 +323,6 @@ public class Main {
 
 					conn = DriverManager.getConnection(url, "root", "");
 					System.out.println("연결 성공!");
-
-//					String sql = "SELECT *";
-//					sql += " FROM article";
-//					sql += " ORDER BY id DESC";
-					
 
 					SecSql sql = new SecSql();
 					sql.append("SELECT *");
