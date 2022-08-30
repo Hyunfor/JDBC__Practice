@@ -59,4 +59,4 @@ loginPW = CONCAT('TestPw',RAND()),
 SELECT * FROM article;
 SELECT * FROM `member`;
 
-#select rand() 
+#select rand(); 

@@ -29,7 +29,7 @@ public class Main {
 				System.out.println("===종료===");
 				break;
 			}
-			if (cmd.equals("member join")) {
+			if (cmd.equals("member join")) { // 회원가입.
 
 				Connection conn = null;
 				PreparedStatement pstmt = null;
@@ -55,6 +55,19 @@ public class Main {
 							System.out.println("아이디를 입력해주세요");
 							continue;
 						}
+						
+						SecSql sql = new SecSql();
+						sql.append("SELECT COUNT(*) > 0");
+						sql.append("FROM `member`");
+						sql.append("WHERE loginId = ?", loginId);
+
+						boolean isLoginIdDup = DBUtil.selectRowBooleanValue(conn, sql);
+
+						if (isLoginIdDup) { // 중복된 아이디가 있는 경우
+							System.out.printf("%s는 이미 사용중인 아이디입니다\n", loginId);
+							continue;
+						}
+						
 						break;
 					}
 					while (true) {
@@ -68,23 +81,23 @@ public class Main {
 
 						boolean loginPwConfirm = true;
 
-						while (true) {
+						while (true) { // 비밀번호 확인
 							System.out.printf("비밀번호 확인 : ");
 							loginPwCheck = sc.nextLine().trim();
 
-							if (loginPwCheck.length() == 0) {
+							if (loginPwCheck.length() == 0) { 
 								System.out.println("비밀번호 확인을 입력해주세요");
 								continue;
 							}
 
-							if (loginPw.equals(loginPwCheck) == false) {
+							if (loginPw.equals(loginPwCheck) == false) { 
 								System.out.println("비밀번호가 일치하지 않습니다. 다시 입력해주세요");
 								loginPwConfirm = false;
 								break;
 							}
 							break;
 						}
-						if (loginPwConfirm) {
+						if (loginPwConfirm) { // 비밀번호가 틀릴시 
 							break;
 						}
 					}
