@@ -67,7 +67,7 @@ public class Main {
 							System.out.printf("%s는 이미 사용중인 아이디입니다\n", loginId);
 							continue;
 						}
-						
+						// 다른 컴퓨터에선 중복문제 해결 됨. 컴퓨터 환경이 내 컴퓨터에선 달라서 에러 뜸.
 						break;
 					}
 					while (true) {
