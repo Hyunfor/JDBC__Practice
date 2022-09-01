@@ -1,5 +1,6 @@
 package com.KoreaIT.JP;
 
+import java.lang.reflect.Member;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,13 +11,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.KoreaIT.JP.test.MemberController;
 import com.KoreaIT.uiil.DBUtil;
 import com.KoreaIT.uiil.SecSql;
 
 public class Main {
 
+	public static List<Member>members; // 테스트 계정 시도 중
 	public static void main(String[] args) throws ClassNotFoundException {
 		Scanner sc = new Scanner(System.in);
+		
+		MemberController memberController = new MemberController(sc, members); // 테스트 계정 시도 중
+		(memberController).makeTestData(); // 테스트 계정 시도 중
 
 		System.out.println("==프로그램 시작==");
 
@@ -33,7 +39,7 @@ public class Main {
 
 				Connection conn = null;
 				PreparedStatement pstmt = null;
-
+				
 				try {
 					Class.forName("com.mysql.jdbc.Driver");
 					String url = "jdbc:mysql://127.0.0.1:3306/JDBCTest?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
@@ -47,6 +53,10 @@ public class Main {
 					String loginPw = null;
 					String loginPwCheck = null;
 					String name = null;
+					
+					Member member = new Member(name, loginId); // 테스트 계정 시도 중
+					members.add(member); // 테스트 계정 시도 중
+					
 
 					while (true) {
 						System.out.printf("아이디 : ");
@@ -389,8 +399,10 @@ public class Main {
 				}
 
 			}
-
+			
 		}
+		
 	}
+	
 
 }
