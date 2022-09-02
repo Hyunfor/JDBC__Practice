@@ -149,7 +149,7 @@ public class Main {
 					}
 				}
 
-			} else if (cmd.startsWith("member modify ")) { // 회원정보 수정
+			} else if (cmd.startsWith("member modify ")) { // 회원정보 수정 기능
 				
 				int id = Integer.parseInt(cmd.split(" ")[2]);
 				Connection conn = null;
