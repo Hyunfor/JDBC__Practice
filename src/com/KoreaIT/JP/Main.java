@@ -149,6 +149,74 @@ public class Main {
 					}
 				}
 
+			} else if (cmd.startsWith("member modify ")) { // 회원정보 수정
+				
+				int id = Integer.parseInt(cmd.split(" ")[2]);
+				Connection conn = null;
+				PreparedStatement pstmt = null;
+				
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+					String url = "jdbc:mysql://127.0.0.1:3306/JDBCTest?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
+
+					conn = DriverManager.getConnection(url, "root", "");
+					System.out.println("연결 성공!");
+
+					System.out.println("== 회원정보 수정 ==");
+					
+					SecSql sql = new SecSql();
+					sql.append("SELECT COUNT(*)");
+					sql.append("FROM `member`");
+					sql.append("WHERE id = ?", id);
+
+					int articlesCount = DBUtil.selectRowIntValue(conn, sql);
+
+					if (articlesCount == 0) {
+						System.out.printf("%d번 회원은 존재하지 않습니다.\n", id);
+						continue;
+					}
+
+					System.out.printf("== %d번 회원정보 수정 ==\n", id);
+
+					System.out.printf("새 이름 : ");
+					String name = sc.nextLine();
+					System.out.printf("새 비밀번호 : ");
+					String loginPw = sc.nextLine();
+
+					sql = new SecSql();
+					sql.append("UPDATE member");
+					sql.append("SET updateDate = NOW()");
+					sql.append(", name = ?", name);
+					sql.append(", loginPw = ?", loginPw);
+					sql.append(" WHERE id = ?;", id);
+
+					System.out.println(sql);
+
+					DBUtil.update(conn, sql);
+
+					System.out.printf("%d번 회원정보가 수정 되었습니다.\n", id);	
+
+				} catch (ClassNotFoundException e) {
+					System.out.println("드라이버 로딩 실패");
+				} catch (SQLException e) {
+					System.out.println("에러: " + e);
+				} finally {
+					try {
+						if (conn != null && !conn.isClosed()) {
+							conn.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					try {
+						if (pstmt != null && !pstmt.isClosed()) {
+							pstmt.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+
 			} else if (cmd.equals("article write")) {
 				System.out.println("== 게시물 작성 ==");
 				System.out.printf("제목 : ");
