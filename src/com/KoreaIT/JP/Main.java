@@ -217,6 +217,62 @@ public class Main {
 					}
 				}
 
+			}else if (cmd.startsWith("member delete ")) { // 회원탈퇴
+				int id = Integer.parseInt(cmd.split(" ")[2]);
+
+				Connection conn = null;
+				PreparedStatement pstmt = null;
+
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+					String url = "jdbc:mysql://127.0.0.1:3306/JDBCTest?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
+
+					conn = DriverManager.getConnection(url, "root", "");
+					System.out.println("연결 성공!");
+
+					SecSql sql = new SecSql();
+					sql.append("SELECT COUNT(*)");
+					sql.append("FROM member");
+					sql.append("WHERE id = ?", id);
+
+					int articlesCount = DBUtil.selectRowIntValue(conn, sql);
+
+					if (articlesCount == 0) {
+						System.out.printf("%d번 회원은 존재하지 않습니다.\n", id);
+						continue;
+					}
+
+					System.out.printf("== 회원 퇄퇴 삭제 ==\n", id);
+
+					sql = new SecSql();
+					sql.append("DELETE FROM member");
+					sql.append("WHERE id = ?", id);
+
+					DBUtil.delete(conn, sql);
+
+					System.out.printf("%d번 게시물이 삭제 되었습니다\n", id);
+
+				} catch (ClassNotFoundException e) {
+					System.out.println("드라이버 로딩 실패");
+				} catch (SQLException e) {
+					System.out.println("에러: " + e);
+				} finally {
+					try {
+						if (conn != null && !conn.isClosed()) {
+							conn.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					try {
+						if (pstmt != null && !pstmt.isClosed()) {
+							pstmt.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+
 			} else if (cmd.equals("article write")) {
 				System.out.println("== 게시물 작성 ==");
 				System.out.printf("제목 : ");
