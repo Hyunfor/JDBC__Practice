@@ -242,7 +242,7 @@ public class Main {
 						continue;
 					}
 
-					System.out.printf("== 회원 퇄퇴 삭제 ==\n", id);
+					System.out.printf("== 회원 탈퇴 ==\n", id);
 
 					sql = new SecSql();
 					sql.append("DELETE FROM member");
@@ -250,7 +250,7 @@ public class Main {
 
 					DBUtil.delete(conn, sql);
 
-					System.out.printf("%d번 게시물이 삭제 되었습니다\n", id);
+					System.out.printf("%d번 회원정보가 삭제 되었습니다\n", id);
 
 				} catch (ClassNotFoundException e) {
 					System.out.println("드라이버 로딩 실패");
