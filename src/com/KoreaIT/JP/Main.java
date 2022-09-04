@@ -273,6 +273,74 @@ public class Main {
 					}
 				}
 
+			}else if (cmd.equals("member list")) { 
+				System.out.println("== 회원 리스트 ==");
+
+				Connection conn = null;
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
+
+				List<Member> members = new MemberList<>();
+
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+					String url = "jdbc:mysql://127.0.0.1:3306/JDBCTest?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
+
+					conn = DriverManager.getConnection(url, "root", "");
+					System.out.println("연결 성공!");
+
+					SecSql sql = new SecSql();
+					sql.append("SELECT *");
+					sql.append("FROM member");
+					sql.append(" ORDER BY id DESC");
+
+					List<Map<String, Object>> membersListMap = DBUtil.selectRows(conn, sql);
+
+					
+					for (Map<String, Object> memberMap : membersListMap) {
+						members.add(new Member(memberMap));
+					}
+
+					if (members.size() == 0) {
+						System.out.println("회원이 없습니다");
+						continue;
+					}
+
+					System.out.println("번호    |    아이디    |      이름");
+
+					for (int i = 0; i < members.size(); i++) {
+						Member member = members.get(i);
+						System.out.printf("%4d    |    %s     |      %s\n", member.id, member.loginId, member.name);
+					}
+
+				} catch (ClassNotFoundException e) {
+					System.out.println("드라이버 로딩 실패");
+				} catch (SQLException e) {
+					System.out.println("에러: " + e);
+				} finally {
+					try {
+						if (rs != null && !rs.isClosed()) {
+							rs.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					try {
+						if (pstmt != null && !pstmt.isClosed()) {
+							pstmt.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					try {
+						if (conn != null && !conn.isClosed()) {
+							conn.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+
 			} else if (cmd.equals("article write")) {
 				System.out.println("== 게시물 작성 ==");
 				System.out.printf("제목 : ");
