@@ -8,7 +8,6 @@ public class Member {
 	public String loginId;
 	public String loginPw;
 	public String name;
-	public Map<String, Object> MemberMap;
 	public String regDate;
 	public String updateDate;
 	
@@ -29,12 +28,12 @@ public class Member {
 	
 	
 	
-	public Member(Map<String, Object>[] membersListMap) {
-		this.id = (int) MemberMap.get("id");
-		this.loginId = (String) MemberMap.get("loginId");
-		this.loginPw = (String) MemberMap.get("loginPw");
-		this.name = (String) MemberMap.get("name");
-	}
+//	public Member(Map<String, Object>[] memberMap) {
+//		this.id = (int) memberMap.get("id");
+//		this.loginId = (String) memberMap.get("loginId");
+//		this.loginPw = (String) memberMap.get("loginPw");
+//		this.name = (String) memberMap.get("name");
+//	}
 
 	@Override
 	public String toString() {

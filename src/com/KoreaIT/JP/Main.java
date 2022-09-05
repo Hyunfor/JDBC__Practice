@@ -273,14 +273,14 @@ public class Main {
 					}
 				}
 
-			}else if (cmd.equals("member list")) { 
+			} else if (cmd.equals("member list")) { 
 				System.out.println("== 회원 리스트 ==");
 
 				Connection conn = null;
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
 
-				List<Member> members = new MemberList<>();
+				List<Member> members; 
 
 				try {
 					Class.forName("com.mysql.jdbc.Driver");
@@ -297,9 +297,9 @@ public class Main {
 					List<Map<String, Object>> membersListMap = DBUtil.selectRows(conn, sql);
 
 					
-					for (Map<String, Object> memberMap : membersListMap) {
-						members.add(new Member(memberMap));
-					}
+//					for (Map<String, Object> memberMap : membersListMap) {
+//						members.add(new Member(memberMap));
+//					}
 
 					if (members.size() == 0) {
 						System.out.println("회원이 없습니다");
@@ -310,7 +310,7 @@ public class Main {
 
 					for (int i = 0; i < members.size(); i++) {
 						Member member = members.get(i);
-						System.out.printf("%4d    |    %s     |      %s\n", member.id, member.loginId, member.name);
+						System.out.printf("%4d    |    %s    |     %s\n", member.id, member.loginId, member.name);
 					}
 
 				} catch (ClassNotFoundException e) {
