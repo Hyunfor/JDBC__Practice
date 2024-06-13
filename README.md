@@ -1,2 +1,2 @@
 # JDBC__Practice
-JDBC 연습
+ JDBC 연습
